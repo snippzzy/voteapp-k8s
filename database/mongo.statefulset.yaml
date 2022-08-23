@@ -14,7 +14,7 @@ spec:
   selector:
     role: db
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongo
@@ -24,6 +24,7 @@ spec:
     matchLabels:
       role: db
       env: demo
+      replicaSet: rs0.main
   serviceName: mongo
   replicas: 3
   template:
@@ -31,6 +32,7 @@ spec:
       labels:
         role: db
         env: demo
+        replicaSet: rs0.main
     spec:
       affinity:
         podAntiAffinity:
