@@ -20,6 +20,10 @@ metadata:
   name: mongo
   namespace: cloudacademy
 spec:
+  selector:
+    matchLabels:
+      role: db
+      env: demo
   serviceName: mongo
   replicas: 3
   template:
@@ -27,7 +31,6 @@ spec:
       labels:
         role: db
         env: demo
-        replicaset: rs0.main
     spec:
       affinity:
         podAntiAffinity:
