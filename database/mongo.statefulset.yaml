@@ -1,38 +1,20 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: mongo
-  namespace: cloudacademy
-  labels:
-    role: db
-    env: demo
-spec:
-  ports:
-  - port: 27017
-    targetPort: 27017
-  clusterIP: None
-  selector:
-    role: db
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongo
   namespace: cloudacademy
 spec:
+  serviceName: mongo
+  replicas: 3
   selector:
     matchLabels:
       role: db
-      env: demo
-      replicaSet: rs0.main
-  serviceName: mongo
-  replicas: 3
   template:
     metadata:
       labels:
         role: db
         env: demo
-        replicaSet: rs0.main
+        replicaset: rs0.main
     spec:
       affinity:
         podAntiAffinity:
@@ -49,7 +31,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: mongo
-          image: mongo
+          image: mongo:4.2
           command:
             - "numactl"
             - "--interleave=all"
@@ -66,13 +48,12 @@ spec:
             - name: mongodb-persistent-storage-claim
               mountPath: /data/db
   volumeClaimTemplates:
-  - metadata:
-      name: mongodb-persistent-storage-claim
-      namespace: cloudacademy
-      annotations:
-        volume.beta.kubernetes.io/storage-class: "standard"
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+    - metadata:
+        name: mongodb-persistent-storage-claim
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: default
+        resources:
+          requests:
+            storage: 0.5Gi
