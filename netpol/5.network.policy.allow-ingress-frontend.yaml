@@ -1,0 +1,17 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-from-ingress-to-frontend
+  namespace: cloudacademy
+spec:
+  podSelector:
+    matchLabels:
+      role: frontend
+  ingress:
+  - from:
+      - podSelector:
+          matchLabels:
+            app: aks-nginx-ingress-nginx-ingress
+        namespaceSelector:
+          matchLabels:
+            name: nginx-ingress
