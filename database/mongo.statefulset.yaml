@@ -66,6 +66,9 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: mongodb-persistent-storage-claim
+        namespace: cloudacademy
+        annotations:
+          volume.beta.kubernetes.io/storage-class: "standard"
       spec:
         accessModes:
           - ReadWriteOnce
